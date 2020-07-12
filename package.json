@@ -1,0 +1,32 @@
+{
+  "name": "agenda_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec index.js",
+    "iniciar": "nodemon --exec babel-node testedois.js",
+    "teste": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=production port=8080 forever start ./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.4",
+    "consign": "^0.1.6",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "helmet": "^3.16.0",
+    "mysql": "^2.16.0",
+    "normalize-port": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^5.16.0",
+    "nodemon": "^1.18.11"
+  }
+}
