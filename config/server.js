@@ -18,7 +18,6 @@ app.use(compression());
 consign()
   .include("app/controllers")
   .then("app/models")
-  .then("app/routes")
   .then("config/dbConnection.js")
   .into(app);
 

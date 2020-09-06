@@ -70,13 +70,19 @@ module.exports.buscarTodos = function(app, req, res) {
   alunosModel.buscarTodos(function(error, result) {
     if (error) {
       console.log(result + " " + error);
-      res.status(400).send({ error: "Erro ao tentar buscar", data: [], fields_validation: [] });
+      res.status(500).send({
+        message: "Falha ao tentar buscar",
+        is_error: true,
+        data: [],
+        fields_validation: [] 
+      });
       return;
     }
 
     if (result != undefined && result.length == 0) {
-      res.status(200).send({
-        error: "Nenhum aluno cadastrado",
+      res.status(404).send({
+        message: "Nenhum aluno encontrado",
+        is_error: false,
         data: [],
         fields_validation: []
       });
@@ -84,7 +90,8 @@ module.exports.buscarTodos = function(app, req, res) {
     }
 
     res.status(200).send({
-      error: "",
+      message: null,
+      is_error: false,
       data: result,
       fields_validation: []
     });
@@ -92,14 +99,15 @@ module.exports.buscarTodos = function(app, req, res) {
 };
 
 module.exports.buscarPorId = function(app, req, res) {
-  req.assert("student_id", "student_id é obrigatório no parâmetro").notEmpty();
+  req.assert("student_id", "student id é obrigatório no parâmetro").notEmpty();
 
   const erros = req.validationErrors();
 
   if (erros) {
-    res.status(400).send({
-      error: "Erro no parâmetro",
-      data:[],
+    res.status(302).send({
+      message: "Erro no parâmetro",
+      is_error: true,
+      data: [],
       fields_validation: erros
     });
     return;
@@ -111,7 +119,12 @@ module.exports.buscarPorId = function(app, req, res) {
   alunosModel.buscarPorId(req.params.student_id, function(error, result) {
     if (error) {
       console.log(result + " " + error);
-      res.status(400).send({ error: "Erro ao tentar buscar" + error, data: [], fields_validation: [] });
+      res.status(500).send({ 
+        message: "Erro ao tentar buscar",
+        is_error: false,
+        data: [],
+        fields_validation: []
+      });
       return;
     }
 
@@ -119,8 +132,9 @@ module.exports.buscarPorId = function(app, req, res) {
 
     if (result.length === 0) {
       console.log("Nenhum aluno encontrado");
-      res.status(200).send({
-        error: "Nenhum aluno com esse id",
+      res.status(404).send({
+        message: "Nenhum aluno econtrado " + error,
+        is_error: false,
         data: [],
         fields_validation: []
       });
@@ -128,7 +142,8 @@ module.exports.buscarPorId = function(app, req, res) {
     }
 
     res.status(200).send({
-      error: "",
+      message: null,
+      is_error: false,
       data: result,
       fields_validation: []
     });
