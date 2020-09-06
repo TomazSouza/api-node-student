@@ -31,11 +31,55 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.post("/salvar", function(req, res) {
+/**
+ * @swagger
+ * paths:
+ *  /student/save:
+ *      post:
+ *        parameters:
+ *          - in: path
+ *            name: student_id
+ *            schema:
+ *               type: string
+ *            required: true
+ *            description: String ID of the student to get
+ *        responses:
+ *            '200':
+ *              description: A successfull response
+ *            '302':
+ *              description: Parameter error
+ *            '404':
+ *              description: No student found
+ *            '500':
+ *              description: Error server
+ */
+app.post("/student/save", function(req, res) {
   app.app.controllers.aluno.salvar(app, req, res);
 });
 
-app.delete("/excluir/:student_id", (req, res) => {
+/**
+ * @swagger
+ * paths:
+ *  /delete/{student_id}:
+ *      delete:
+ *        parameters:
+ *          - in: path
+ *            name: student_id
+ *            schema:
+ *               type: string
+ *            required: true
+ *            description: String ID of the student to delete
+ *        responses:
+ *            '201':
+ *              description: A successfull response
+ *            '303':
+ *              description: Parameter error
+ *            '404':
+ *              description: No student found
+ *            '500':
+ *              description: Error server
+ */
+app.delete("/delete/:student_id", (req, res) => {
   app.app.controllers.aluno.deletar(app, req, res);
 });
 

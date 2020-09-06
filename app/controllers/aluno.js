@@ -1,4 +1,4 @@
-module.exports.salvar = function(app, req, res) {
+module.exports.salvar = function (app, req, res) {
   const aluno = req.body;
 
   req.assert("name", "Nome é obrigatório").notEmpty();
@@ -10,10 +10,11 @@ module.exports.salvar = function(app, req, res) {
   const erros = req.validationErrors();
 
   if (erros) {
-    res.status(400).send({
-      error: "Erro ao tentar salvar",
+    res.status(303).send({
+      message: "Erro no corpo da requisição",
+      is_error: true,
       data: [],
-      fields_validation: erros
+      fields_validation: erros,
     });
     return;
   }
@@ -21,26 +22,27 @@ module.exports.salvar = function(app, req, res) {
   const connection = app.config.dbConnection();
   const alunosModel = new app.app.models.AlunosDAO(connection);
 
-  alunosModel.salvar(aluno, function(error, result) {
-    //console.log(result);
+  alunosModel.salvar(aluno, function (error, result) {
     res.status(201).send({
-      error: "Aluno salvo com sucesso",
-      data: [{student_id: result.insertId}],
-      fields_validation: []
+      message: "Aluno salvo com sucesso",
+      is_error: false,
+      data: [{ student_id: result.insertId }],
+      fields_validation: [],
     });
   });
 };
 
-module.exports.deletar = function(app, req, res) {
+module.exports.deletar = function (app, req, res) {
   req.assert("student_id", "idAluno é obrigatório no parâmetro").notEmpty();
 
   const erros = req.validationErrors();
 
   if (erros) {
-    res.status(400).send({
-      error: "Erro no parâmetro",
+    res.status(302).send({
+      message: "Erro no parâmetro",
+      is_error: true,
       data: [],
-      fields_validation: erros
+      fields_validation: erros,
     });
     return;
   }
@@ -48,33 +50,48 @@ module.exports.deletar = function(app, req, res) {
   const connection = app.config.dbConnection();
   const alunosModel = new app.app.models.AlunosDAO(connection);
 
-  alunosModel.deletar(req.params.student_id, function(error, result) {
+  alunosModel.deletar(req.params.student_id, function (error, result) {
     if (error) {
-      //console.log(result + " " + error);
-      res.status(400).send({ error: "Erro ao tentar deletar", data: [], fields_validation: [] });
+      res.status(500).send({
+        message: "Erro ao tentar deletar",
+        is_error: false,
+        data: [],
+        fields_validation: [],
+      });
+      return;
+    }
+
+    if (result != undefined && result.affectedRows == 0) {
+      res.status(404).send({
+        message: "Nenhum aluno encontrado",
+        is_error: false,
+        data: [],
+        fields_validation: [],
+      });
       return;
     }
 
     res.status(201).send({
-      error: `Aluno deletado com sucesso`,
+      message: "Aluno deletado com sucesso",
+      is_error: false,
       data: [],
-      fields_validation: []
+      fields_validation: [],
     });
   });
 };
 
-module.exports.buscarTodos = function(app, req, res) {
+module.exports.buscarTodos = function (app, req, res) {
   const connection = app.config.dbConnection();
   const alunosModel = new app.app.models.AlunosDAO(connection);
 
-  alunosModel.buscarTodos(function(error, result) {
+  alunosModel.buscarTodos(function (error, result) {
     if (error) {
       console.log(result + " " + error);
       res.status(500).send({
         message: "Falha ao tentar buscar",
         is_error: true,
         data: [],
-        fields_validation: [] 
+        fields_validation: [],
       });
       return;
     }
@@ -84,7 +101,7 @@ module.exports.buscarTodos = function(app, req, res) {
         message: "Nenhum aluno encontrado",
         is_error: false,
         data: [],
-        fields_validation: []
+        fields_validation: [],
       });
       return;
     }
@@ -93,12 +110,12 @@ module.exports.buscarTodos = function(app, req, res) {
       message: null,
       is_error: false,
       data: result,
-      fields_validation: []
+      fields_validation: [],
     });
   });
 };
 
-module.exports.buscarPorId = function(app, req, res) {
+module.exports.buscarPorId = function (app, req, res) {
   req.assert("student_id", "student id é obrigatório no parâmetro").notEmpty();
 
   const erros = req.validationErrors();
@@ -108,7 +125,7 @@ module.exports.buscarPorId = function(app, req, res) {
       message: "Erro no parâmetro",
       is_error: true,
       data: [],
-      fields_validation: erros
+      fields_validation: erros,
     });
     return;
   }
@@ -116,14 +133,14 @@ module.exports.buscarPorId = function(app, req, res) {
   const connection = app.config.dbConnection();
   const alunosModel = new app.app.models.AlunosDAO(connection);
 
-  alunosModel.buscarPorId(req.params.student_id, function(error, result) {
+  alunosModel.buscarPorId(req.params.student_id, function (error, result) {
     if (error) {
       //console.log(result + " " + error);
-      res.status(500).send({ 
+      res.status(500).send({
         message: "Erro ao tentar buscar",
         is_error: false,
         data: [],
-        fields_validation: []
+        fields_validation: [],
       });
       return;
     }
@@ -136,7 +153,7 @@ module.exports.buscarPorId = function(app, req, res) {
         message: "Nenhum aluno econtrado " + error,
         is_error: false,
         data: [],
-        fields_validation: []
+        fields_validation: [],
       });
       return;
     }
@@ -145,7 +162,7 @@ module.exports.buscarPorId = function(app, req, res) {
       message: null,
       is_error: false,
       data: result,
-      fields_validation: []
+      fields_validation: [],
     });
   });
 };
