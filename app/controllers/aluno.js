@@ -22,7 +22,7 @@ module.exports.salvar = function(app, req, res) {
   const alunosModel = new app.app.models.AlunosDAO(connection);
 
   alunosModel.salvar(aluno, function(error, result) {
-    console.log(result);
+    //console.log(result);
     res.status(201).send({
       error: "Aluno salvo com sucesso",
       data: [{student_id: result.insertId}],
@@ -50,7 +50,7 @@ module.exports.deletar = function(app, req, res) {
 
   alunosModel.deletar(req.params.student_id, function(error, result) {
     if (error) {
-      console.log(result + " " + error);
+      //console.log(result + " " + error);
       res.status(400).send({ error: "Erro ao tentar deletar", data: [], fields_validation: [] });
       return;
     }
@@ -118,7 +118,7 @@ module.exports.buscarPorId = function(app, req, res) {
 
   alunosModel.buscarPorId(req.params.student_id, function(error, result) {
     if (error) {
-      console.log(result + " " + error);
+      //console.log(result + " " + error);
       res.status(500).send({ 
         message: "Erro ao tentar buscar",
         is_error: false,
@@ -131,7 +131,7 @@ module.exports.buscarPorId = function(app, req, res) {
     console.log(result);
 
     if (result.length === 0) {
-      console.log("Nenhum aluno encontrado");
+      //console.log("Nenhum aluno encontrado");
       res.status(404).send({
         message: "Nenhum aluno econtrado " + error,
         is_error: false,

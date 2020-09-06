@@ -29,33 +29,16 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-//Routes
-/**
- * @swagger
- * /customers:
- *  get:
- *      description: Use to request all customers
- *      responses:
- *          '200':
- *              description: A successfull response
- */
-app.get('/customers',(req, res) => {
-  res.status(200).send('Customer results');
-});
-
-// Create
 app.post("/salvar", function(req, res) {
   app.app.controllers.aluno.salvar(app, req, res);
 });
 
-// Delete
 app.delete("/excluir/:student_id", (req, res) => {
   app.app.controllers.aluno.deletar(app, req, res);
 });
 
-// Read
 /**
  * @swagger
  * /students:
@@ -116,19 +99,11 @@ app.get("/status", (req, res) => {
 })
 
 if (cluster.isMaster) {
-  console.log("Master process is running");
-
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
 
   cluster.on("exit", (worker, code, signal) => {
-    console.log(
-      `Worker ${
-        worker.process.pid
-      } died with code: ${code}, and signal: ${signal}`
-    );
-    console.log("Starting a new worker");
     cluster.fork();
   });
 } else {
