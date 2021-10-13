@@ -4,7 +4,7 @@ const connection = () => {
   return mysql.createConnection({
     host: "127.0.0.1",
     user: "root",
-    password: "ZAMcry189",
+    password: "root",
     database: "aluno_dev_db"
   });
 };
